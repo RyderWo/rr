@@ -1,0 +1,37 @@
+import objectdraw.*;
+
+public class Lane extends ActiveObject {
+    private static final int MAX_VEHICLE_SIZE = 139;
+    private double vel;
+    private DrawingCanvas canvas;
+    private Image vImage;
+    private Image vImage2;
+    private double laneLength;
+    private Frog frog;
+    private Location point;
+    private Image[] imageList;
+
+    public Lane(double vel, Image vImage, Image vImage2, Location point, double laneLength, Frog frog, DrawingCanvas canvas) {
+        this.vel = vel;
+        this.canvas = canvas;
+        this.vImage = vImage;
+        this.vImage2 = vImage2;
+        this.laneLength = laneLength;
+        this.frog = frog;
+        this.point = point;
+        this.imageList = new Image[2];
+        this.imageList[0] = vImage;
+        this.imageList[1] = vImage2;
+        start();
+    }
+
+    public void run() {
+        while (true) {
+            Image randomImage = imageList[(int) (Math.random() * 2)];
+            Vehicle car = new Vehicle(randomImage, point, vel, laneLength, frog, canvas);
+            // Calculate a random pause time based on the vehicle's velocity
+            double randomPauseTime = MAX_VEHICLE_SIZE * (2 + (Math.random() * 3)) / Math.abs(vel);
+            pause((int) randomPauseTime);
+        }
+    }
+}
