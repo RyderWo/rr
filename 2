@@ -1,0 +1,58 @@
+import objectdraw.*;
+
+public class Frog {
+    // Height of the frog image
+    private static final double FROG_HEIGHT = 48;
+    private boolean isAlive = true;
+    private VisibleImage frogImage;
+    private Text t;
+    private Location start;
+    private double laneWidth1;
+
+    public Frog(Image i, Location point, double laneWidth, DrawingCanvas canvas) {
+        frogImage = new VisibleImage(i, point, canvas);
+        start = point;
+        laneWidth1 = laneWidth;
+        t = new Text("Ouch!", canvas.getWidth() * 2 / 4, canvas.getHeight() * 6 / 7, canvas);
+        t.setFontSize(20);
+        t.move(-t.getWidth() / 2, -t.getHeight() / 2);
+        t.hide();
+    }
+
+    public boolean overlaps(VisibleImage vehicleImage) {
+        return frogImage.overlaps(vehicleImage);
+    }
+
+    public void kill(DrawingCanvas canvas) {
+        t.show();
+        isAlive = false;
+    }
+
+    public void reincarnate() {
+        t.hide();
+        if (!isAlive) {
+            frogImage.moveTo(start);
+            isAlive = true;
+        } else {
+            frogImage.move(0, laneWidth1);
+        }
+    }
+
+    public void hopToward(Location point) {
+        if (point.getX() < frogImage.getX()) { // on left
+            frogImage.move(-laneWidth1, 0);
+        } else if (point.getX() > frogImage.getX() && point.getX() < frogImage.getX() + frogImage.getWidth()) { // inside
+            if (point.getY() < frogImage.getY()) { // above
+                frogImage.move(0, -laneWidth1);
+            } else if (point.getY() > frogImage.getY() + frogImage.getHeight()) { // below
+                frogImage.move(0, laneWidth1);
+            }
+        } else if (point.getX() > frogImage.getX() + frogImage.getWidth()) { // right
+            frogImage.move(laneWidth1, 0);
+        }
+    }
+
+    public boolean isAlive() {
+        return isAlive;
+    }
+}
