@@ -1,0 +1,35 @@
+import objectdraw.*;
+
+public class Vehicle extends ActiveObject {
+    private VisibleImage vImage;
+    private Location start;
+    private double laneLength1;
+    private double v;
+    private Frog frog;
+    private DrawingCanvas canvas1;
+
+    public Vehicle(Image k, Location point, double vel, double laneLength, Frog frog1, DrawingCanvas canvas) {
+        vImage = new VisibleImage(k, point, canvas);
+        start = point;
+        laneLength1 = laneLength;
+        v = vel;
+        frog = frog1;
+        canvas1 = canvas;
+        start();
+    }
+
+    public void run() {
+        while (vImage.getX() <= laneLength1 && vImage.getX() >= 0) {
+            long time = System.currentTimeMillis();
+            pause(30);
+            long timeN = System.currentTimeMillis() - time;
+            int timeD = (int) (timeN);
+            vImage.move(v * timeD, 0);
+            if (frog.overlaps(vImage)) {
+                frog.kill(canvas1);
+                vImage.removeFromCanvas();
+                break; // End the loop when the vehicle hits the frog
+            }
+        }
+    }
+}
