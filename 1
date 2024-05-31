@@ -1,0 +1,37 @@
+import objectdraw.*;
+import java.awt.*;
+
+public class lane extends ActiveObject {
+    public static final int MAX_VEHICLE_SIZE = 139;
+    private double vel;
+    private DrawingCanvas canvas;
+    private Image vImage;
+    private Image  vImage2;
+    private double lL;
+    private Frog frog1;
+    private Location point1;
+    private Image[] ilist;
+
+    public lane(double v, Image k, Image i, Location point, double laneL, Frog frog, DrawingCanvas c) {
+        vel = v;
+        canvas = c;
+        vImage = k;
+        vImage2 = i;
+        lL = laneL;
+        frog1 = frog;
+        point1 = point;
+        ilist = new Image[2];
+        ilist[0] = vImage;
+        ilist[1] = vImage2;
+        start();
+    }
+
+    public void run() {
+        while (true) {
+            Image ii = ilist[((int) (Math.random() * 2))];
+            vehicle car = new vehicle(ii, point1, vel, lL, frog1, canvas);
+
+            pause(139 * (2 + (Math.random() * 3)) / Math.abs(vel)); // Pause for the calculated time before generating the next vehicle
+        }
+    }
+}
